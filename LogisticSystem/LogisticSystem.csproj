@@ -65,6 +65,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="View\AddEditProductWindow.xaml.cs">
+      <DependentUpon>AddEditProductWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddEditShipmentWindow.xaml.cs">
+      <DependentUpon>AddEditShipmentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddEditWarehouseWindow.xaml.cs">
+      <DependentUpon>AddEditWarehouseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminPanelWindow.xaml.cs">
+      <DependentUpon>AdminPanelWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AuthorizeWindow.xaml.cs">
+      <DependentUpon>AuthorizeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\LogisticsContext.cs" />
     <Compile Include="Migrations\202605040347558_InitialCreate.cs" />
     <Compile Include="Migrations\202605040347558_InitialCreate.Designer.cs">
@@ -79,10 +94,42 @@
     <Compile Include="Models\Shipment.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Warehouse.cs" />
-    <Compile Include="ShipmentsWindow.xaml.cs">
+    <Compile Include="View\OrdersManagementWindow.xaml.cs">
+      <DependentUpon>OrdersManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportWindow.xaml.cs">
+      <DependentUpon>ReportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ShipmentsWindow.xaml.cs">
       <DependentUpon>ShipmentsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="View\UserManagementWindow.xaml.cs">
+      <DependentUpon>UserManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OrderWindow.xaml.cs">
+      <DependentUpon>OrderWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\AddEditProductWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddEditShipmentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddEditWarehouseWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminPanelWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AuthorizeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -90,13 +137,29 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ShipmentsWindow.xaml">
+    <Page Include="View\OrdersManagementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ShipmentsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserManagementWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OrderWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
