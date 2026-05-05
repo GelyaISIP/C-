@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
         Title="Авторизация" Height="450" Width="400" Background="#E6E6FA">
-    <StackPanel Margin="30">
+    <StackPanel Margin="20">
         <TextBlock Text="Система логистики" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
         
         <TextBlock Text="Логин" FontSize="16" Margin="0,10,0,5"/>
@@ -15,8 +15,9 @@
         <TextBlock Text="Пароль" FontSize="16"  Margin="0,20,0,5"/>
         <PasswordBox x:Name="txtPassword" Height="35" VerticalContentAlignment="Center" Padding="10,0"/>
 
-        <Button Content="Вход" Foreground="White" Height="40" Margin="0,40,0,10" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnLogin_Click"></Button>
-        <Button Content="Выход" Foreground="White" Height="40" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnExit_Click"></Button>
+        <Button Content="Вход" Foreground="White" Height="40" Margin="0,30,0,10" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnLogin_Click"></Button>
+        <Button Content="Выход" Foreground="White" Height="40" Margin="0,0,0,10" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnExit_Click"></Button>
+		<Button Content="Регистрация" Foreground="White" Height="40" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnRegistration_Click"></Button>
 
-    </StackPanel>
+	</StackPanel>
 </Window>

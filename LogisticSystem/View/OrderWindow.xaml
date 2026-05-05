@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogisticSystem.View"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="OrderWindow" Height="450" Width="800" Background="#E6E6FA">
     <Grid Margin="20">
@@ -17,11 +18,11 @@
             <UniformGrid Columns="2">
                 <StackPanel Margin="0,0,10,0">
                     <TextBlock Text="Клиент:" FontSize="16"/>
-                    <ComboBox x:Name="cbClients" Height="20" Background="White"/>
+                    <ComboBox x:Name="cbClients" Height="30" DisplayMemberPath="Name" SelectedValuePath="Id"/>
                 </StackPanel>
                 <StackPanel Margin="10,0,0,0">
                     <TextBlock Text="Дата заказа:" FontSize="16"/>
-                    <ComboBox x:Name="dpOrderDate" Height="20" Background="White"/>
+                    <DatePicker x:Name="dpOrderDate" Height="30" SelectedDate="{x:Static sys:DateTime.Now}"/>
                 </StackPanel>
             </UniformGrid>
         </StackPanel>
@@ -37,7 +38,7 @@
             </Grid>
         </GroupBox>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button x:Name="btnAddProduct" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Добавить товар" Width="130" Height="35" Margin="0,0,10,0"></Button>
+            <Button x:Name="btnAddProduct" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Добавить товар" Width="130" Height="35" Margin="0,0,10,0" Click="btnAddProduct_Click"></Button>
             <Button x:Name="btnSaveOrder" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Оформить заказ" Width="130" Height="35" Click="btnSaveOrder_Click"></Button>
         </StackPanel>
     </Grid>

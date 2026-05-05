@@ -65,10 +65,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AuthorizeWindow.xaml.cs">
+      <DependentUpon>AuthorizeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\LogisticsContext.cs" />
     <Compile Include="Migrations\202605040347558_InitialCreate.cs" />
     <Compile Include="Migrations\202605040347558_InitialCreate.Designer.cs">
       <DependentUpon>202605040347558_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605050358512_InitialCreate1.cs" />
+    <Compile Include="Migrations\202605050358512_InitialCreate1.Designer.cs">
+      <DependentUpon>202605050358512_InitialCreate1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
@@ -79,9 +86,22 @@
     <Compile Include="Models\Shipment.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Warehouse.cs" />
+    <Compile Include="RegistrationWindow.xaml.cs">
+      <DependentUpon>RegistrationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShipmentsWindow.xaml.cs">
       <DependentUpon>ShipmentsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\AddProductToOrderWindow.xaml.cs">
+      <DependentUpon>AddProductToOrderWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OrderWindow.xaml.cs">
+      <DependentUpon>OrderWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="AuthorizeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,9 +114,21 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RegistrationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ShipmentsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddProductToOrderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OrderWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +147,9 @@
     </Compile>
     <EmbeddedResource Include="Migrations\202605040347558_InitialCreate.resx">
       <DependentUpon>202605040347558_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605050358512_InitialCreate1.resx">
+      <DependentUpon>202605050358512_InitialCreate1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
