@@ -33,8 +33,11 @@ namespace LogisticSystem.View
 
         private void CbReportType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            dgReport.ItemsSource = null;
-            dgReport.Columns.Clear();
+            if (dgReport != null)
+            {
+                dgReport.ItemsSource = null;
+                dgReport.Columns.Clear();
+            }
         }
 
         private void GenerateReport_Click(object sender, RoutedEventArgs e)

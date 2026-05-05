@@ -2,6 +2,7 @@
 using LogisticSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace LogisticSystem.View
         private LogisticsContext db;
         private Product currentProduct;
         private bool isEdit;
+        public ObservableCollection<StockItem> StockItems { get; set; }
 
         public AddEditProductWindow(LogisticsContext context, Product product = null)
         {
@@ -32,16 +34,42 @@ namespace LogisticSystem.View
             currentProduct = product ?? new Product();
             isEdit = product != null;
 
+            StockItems = new ObservableCollection<StockItem>();
+
+            LoadWarehousesAndStocks();
+            DataContext = this; // для привязки StockItems
+
             if (isEdit)
             {
                 Title = "Редактирование товара";
                 tbName.Text = currentProduct.Name;
                 tbSKU.Text = currentProduct.SKU;
-                tbQuantity.Text = currentProduct.Quantity.ToString();
+                // Загружаем существующие Stocks
+                var existingStocks = db.Stocks.Where(s => s.ProductId == currentProduct.Id).ToList();
+                foreach (var stockItem in StockItems)
+                {
+                    var existing = existingStocks.FirstOrDefault(s => s.WarehouseId == stockItem.WarehouseId);
+                    stockItem.Quantity = existing?.Quantity ?? 0;
+                }
             }
             else
             {
                 Title = "Новый товар";
+                // Для нового товара все количества = 0
+            }
+        }
+
+        private void LoadWarehousesAndStocks()
+        {
+            var warehouses = db.Warehouses.ToList();
+            foreach (var w in warehouses)
+            {
+                StockItems.Add(new StockItem
+                {
+                    WarehouseId = w.Id,
+                    WarehouseName = w.Name,
+                    Quantity = 0
+                });
             }
         }
 
@@ -49,22 +77,61 @@ namespace LogisticSystem.View
         {
             if (string.IsNullOrWhiteSpace(tbName.Text))
             {
-                MessageBox.Show("Введите название");
+                MessageBox.Show("Введите название товара", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            if (!int.TryParse(tbQuantity.Text, out int qty))
-                qty = 0;
 
             currentProduct.Name = tbName.Text;
             currentProduct.SKU = tbSKU.Text;
-            currentProduct.Quantity = qty;
 
+            // Сохраняем товар сначала, чтобы получить Id для нового
             if (!isEdit)
                 db.Products.Add(currentProduct);
+            db.SaveChanges(); // теперь Id у currentProduct есть
 
+            // Обновляем Stocks
+            foreach (var item in StockItems)
+            {
+                var stock = db.Stocks.FirstOrDefault(s => s.ProductId == currentProduct.Id && s.WarehouseId == item.WarehouseId);
+                if (item.Quantity > 0)
+                {
+                    if (stock == null)
+                    {
+                        stock = new ProductWarehouse
+                        {
+                            ProductId = currentProduct.Id,
+                            WarehouseId = item.WarehouseId,
+                            Quantity = item.Quantity
+                        };
+                        db.Stocks.Add(stock);
+                    }
+                    else
+                    {
+                        stock.Quantity = item.Quantity;
+                    }
+                }
+                else
+                {
+                    // Если количество = 0, можно удалить запись, но лучше оставить с 0
+                    if (stock != null)
+                        stock.Quantity = 0;
+                }
+            }
             db.SaveChanges();
+
+            // Вычисляем общее количество как сумму по складам
+            currentProduct.Quantity = StockItems.Sum(i => i.Quantity);
+            db.SaveChanges();
+
             DialogResult = true;
             Close();
         }
+    }
+
+    public class StockItem
+    {
+        public int WarehouseId { get; set; }
+        public string WarehouseName { get; set; }
+        public int Quantity { get; set; }
     }
 }

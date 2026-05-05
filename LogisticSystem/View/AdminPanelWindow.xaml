@@ -31,10 +31,10 @@
                     </StackPanel>
                     <DataGrid x:Name="dgProducts" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionChanged="dgProducts_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="30"/>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
-                            <DataGridTextColumn Header="Артикул" Binding="{Binding SKU}" Width="120"/>
-                            <DataGridTextColumn Header="Остаток" Binding="{Binding Quantity}" Width="80"/>
+                            <DataGridTextColumn Header="Артикул" Binding="{Binding SKU}" Width="*"/>
+                            <DataGridTextColumn Header="Остаток по складам" Binding="{Binding Quantity}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

@@ -65,6 +65,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Migrations\202605050518292_AddRegistrationDate.cs" />
+    <Compile Include="Migrations\202605050518292_AddRegistrationDate.Designer.cs">
+      <DependentUpon>202605050518292_AddRegistrationDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddProductToOrderWindow.xaml.cs">
+      <DependentUpon>AddProductToOrderWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AuthorizeWindow.xaml.cs">
       <DependentUpon>AuthorizeWindow.xaml</DependentUpon>
     </Compile>
@@ -84,14 +91,6 @@
       <DependentUpon>AdminPanelWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\LogisticsContext.cs" />
-    <Compile Include="Migrations\202605040347558_InitialCreate.cs" />
-    <Compile Include="Migrations\202605040347558_InitialCreate.Designer.cs">
-      <DependentUpon>202605040347558_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202605050358512_InitialCreate1.cs" />
-    <Compile Include="Migrations\202605050358512_InitialCreate1.Designer.cs">
-      <DependentUpon>202605050358512_InitialCreate1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Order.cs" />
@@ -191,11 +190,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202605040347558_InitialCreate.resx">
-      <DependentUpon>202605040347558_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202605050358512_InitialCreate1.resx">
-      <DependentUpon>202605050358512_InitialCreate1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202605050518292_AddRegistrationDate.resx">
+      <DependentUpon>202605050518292_AddRegistrationDate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

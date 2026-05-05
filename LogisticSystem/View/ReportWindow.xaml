@@ -22,7 +22,7 @@
             </ComboBox>
 
             <TextBlock Text="с:" VerticalAlignment="Center" Margin="10,0,5,0"/>
-            <DatePicker x:Name="dpStart" Width="110" SelectedDate="{Binding StartDate, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <DatePicker x:Name="dpStart" Width="110"/>
 
             <TextBlock Text="по:" VerticalAlignment="Center" Margin="10,0,5,0"/>
             <DatePicker x:Name="dpEnd" Width="110"/>

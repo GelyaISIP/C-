@@ -16,10 +16,6 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
             <TextBlock Text="Новый заказ" FontSize="20" FontWeight="Bold"/>
             <UniformGrid Columns="2">
-                <StackPanel Margin="0,0,10,0">
-                    <TextBlock Text="Клиент:" FontSize="16"/>
-                    <ComboBox x:Name="cbClients" Height="30" DisplayMemberPath="Name" SelectedValuePath="Id"/>
-                </StackPanel>
                 <StackPanel Margin="10,0,0,0">
                     <TextBlock Text="Дата заказа:" FontSize="16"/>
                     <DatePicker x:Name="dpOrderDate" Height="30" SelectedDate="{x:Static sys:DateTime.Now}"/>
@@ -30,9 +26,9 @@
             <Grid>
                 <DataGrid x:Name="dgOrderItems" AutoGenerateColumns="False" Margin="5" Background="White">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Товар" Width="*"/>
-                        <DataGridTextColumn Header="Кол-во" Width="100"/>
-                        <DataGridTextColumn Header="Склад" Width="150"/>
+                        <DataGridTextColumn Header="Товар"  Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="100"/>
+                        <DataGridTextColumn Header="Склад" Binding="{Binding WarehouseName}" Width="150"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

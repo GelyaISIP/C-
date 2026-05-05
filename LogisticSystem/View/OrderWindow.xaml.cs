@@ -24,53 +24,60 @@ namespace LogisticSystem.View
     {
         private LogisticsContext db;
         private ObservableCollection<OrderItem> orderItems = new ObservableCollection<OrderItem>();
+        private User currentUser;
+        private Client currentClient;
+
         public OrderWindow()
         {
             InitializeComponent();
             db = new LogisticsContext();
-            LoadClients();
+            LoadCurrentClient();
             dgOrderItems.ItemsSource = orderItems;
         }
-        private void LoadClients()
+
+        private void LoadCurrentClient()
         {
-            var clients = db.Clients.OrderBy(c => c.Name).ToList();
-            cbClients.ItemsSource = clients;
-            if (clients.Any()) cbClients.SelectedIndex = 0;
-        }
-        private void btnAddProduct_Click(Object sender, RoutedEventArgs e)
-        {
-            var addProductWindow = new AddProductToOrderWindow(db);
-            if (addProductWindow.ShowDialog() == true)
+            // Получаем текущего пользователя, сохранённого при авторизации
+            currentUser = Application.Current.Properties["CurrentUser"] as User;
+            if (currentUser == null)
             {
-                var newItem = addProductWindow.SelectedOrderItem;
-                if (newItem != null)
-                    orderItems.Add(newItem);
+                MessageBox.Show("Ошибка: пользователь не авторизован.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+                return;
+            }
+
+            // Находим клиента, связанного с этим пользователем
+            currentClient = db.Clients.FirstOrDefault(c => c.UserId == currentUser.Id);
+            if (currentClient == null)
+            {
+                MessageBox.Show("Для вашего аккаунта не найден клиент. Обратитесь к администратору.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+                return;
             }
         }
+
+        private void btnAddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            var addWindow = new AddProductToOrderWindow(db);
+            if (addWindow.ShowDialog() == true)
+            {
+                orderItems.Add(addWindow.SelectedOrderItem);
+            }
+        }
+
         private void btnSaveOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (cbClients.SelectedValue == null)
-            {
-                MessageBox.Show("Выберите клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (dpOrderDate.SelectedDate == null)
-            {
-                MessageBox.Show("Выберите дату заказа", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
             if (orderItems.Count == 0)
             {
                 MessageBox.Show("Добавьте хотя бы один товар", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            int clientId = (int)cbClients.SelectedValue;
-            DateTime orderDate = dpOrderDate.SelectedDate.Value;
+            DateTime orderDate = dpOrderDate.SelectedDate ?? DateTime.Now;
 
             var order = new Order
             {
-                ClientId = clientId,
+                ClientId = currentClient.Id,
                 OrderDate = orderDate,
                 Status = "New"
             };
@@ -86,16 +93,14 @@ namespace LogisticSystem.View
 
                         foreach (var item in orderItems)
                         {
-                            // Проверяем, достаточно ли товара на выбранном складе
+                            // Проверка остатков на складе
                             var stock = context.Stocks.FirstOrDefault(s => s.ProductId == item.ProductId && s.WarehouseId == item.WarehouseId);
                             if (stock == null || stock.Quantity < item.Quantity)
                             {
-                                MessageBox.Show($"Недостаточно товара '{item.ProductName}' на складе", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show($"Недостаточно товара '{item.ProductName}' на складе '{item.WarehouseName}'.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                                 transaction.Rollback();
                                 return;
                             }
-
-                            // Резервируем (уменьшаем количество)
                             stock.Quantity -= item.Quantity;
 
                             context.OrderProducts.Add(new OrderProduct
@@ -107,25 +112,25 @@ namespace LogisticSystem.View
                         }
                         context.SaveChanges();
                         transaction.Commit();
-                        MessageBox.Show("Заказ успешно создан", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        this.Close();
+                        MessageBox.Show("Заказ успешно оформлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Close();
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show("Ошибка при сохранении заказа: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show($"Ошибка при сохранении заказа: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
         }
-        public class OrderItem
-        {
-            public int ProductId { get; set; }
-            public string ProductName { get; set; }
-            public int Quantity { get; set; }
-            public int WarehouseId { get; set; }
-            public string WarehouseName { get; set; }
-        }
+    }
 
+    public class OrderItem
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+        public int WarehouseId { get; set; }
+        public string WarehouseName { get; set; }
     }
 }

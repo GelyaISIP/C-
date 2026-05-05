@@ -86,6 +86,16 @@ namespace LogisticSystem.View
                     db.Users.Add(newUser);
                     db.SaveChanges();
 
+                        var client = new Client
+                        {
+                            Name = login, // временно можно использовать логин
+                            Email = null,
+                            Phone = null,
+                            UserId = newUser.Id
+                        };
+                        db.Clients.Add(client);
+                        db.SaveChanges();
+
                     string roleMessage = role == "Manager"
                         ? "Вы зарегистрированы как менеджер (первый пользователь системы)"
                         : "Вы зарегистрированы как клиент";
