@@ -3,9 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helper="clr-namespace:LogisticSystem.Helper"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
         Title="Управление отгрузками" Height="500" Width="750" Background="#E6E6FA">
+    <Window.Resources>
+        <helper:StatusConverter x:Key="StatusConverter"/>
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,11 +17,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
             <Button Content="Добавить отгрузку" Width="120" Margin="5" Click="AddShipment_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Подтвердить отгрузку" Width="140" Margin="5" x:Name="btnConfirm" IsEnabled="False" Click="ConfirmShipment_Click" Background="#4B0082" Foreground="White"/>
             <Button Content="Редактировать" Width="100" Margin="5" x:Name="btnEdit" IsEnabled="False" Click="EditShipment_Click" Background="#4B0082" Foreground="White"/>
             <Button Content="Удалить" Width="100" Margin="5" x:Name="btnDelete" IsEnabled="False" Click="DeleteShipment_Click" Background="#4B0082" Foreground="White"/>
             <Button Content="Обновить" Width="100" Margin="5" Click="Refresh_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Выйти" Width="100" Margin="5" Click="Exit_Click" Background="#4B0082" Foreground="White" FontWeight="Bold"/>
         </StackPanel>
 
         <GroupBox Grid.Row="1" Header="Фильтры" Margin="0,0,0,10">
@@ -40,21 +46,21 @@
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="1" Margin="5">
                     <TextBlock Text="Клиент:"/>
-                    <ComboBox x:Name="cbClientFilter" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                    <TextBox x:Name="tbClientSearch" Width="250"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
                     <TextBlock Text="Статус заказа:"/>
                     <ComboBox x:Name="cbStatusFilter">
                         <ComboBoxItem Content="Все" IsSelected="True"/>
-                        <ComboBoxItem Content="New"/>
-                        <ComboBoxItem Content="Shipped"/>
-                        <ComboBoxItem Content="Completed"/>
+                        <ComboBoxItem Content="Новый"/>
+                        <ComboBoxItem Content="Отгружен"/>
+                        <ComboBoxItem Content="Завершён"/>
                     </ComboBox>
                 </StackPanel>
 
                 <!-- Вторая строка -->
                 <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
-                    <TextBlock Text="Начальная дата:"/>
+                    <TextBlock Text="Плановая дата:"/>
                     <DatePicker x:Name="dpStartDate"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
@@ -71,14 +77,16 @@
                 Background="#9D81BA" Foreground="White"/>
             </Grid>
         </GroupBox>
-        <DataGrid x:Name="dgShipments" Grid.Row="2" AutoGenerateColumns="False" SelectionChanged="dgShipments_SelectionChanged">
+        <DataGrid x:Name="dgShipments" Grid.Row="2" AutoGenerateColumns="False" 
+                  SelectionChanged="dgShipments_SelectionChanged" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
-                <DataGridTextColumn Header="Заказ №" Binding="{Binding OrderId}" Width="80"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Заказ №" Binding="{Binding OrderId}" Width="70"/>
                 <DataGridTextColumn Header="Клиент" Binding="{Binding Order.Client.Name}" Width="150"/>
                 <DataGridTextColumn Header="Склад" Binding="{Binding Warehouse.Name}" Width="120"/>
-                <DataGridTextColumn Header="Дата отгрузки" Binding="{Binding ShipmentDate, StringFormat=dd.MM.yyyy}" Width="120"/>
-                <DataGridTextColumn Header="Статус заказа" Binding="{Binding Order.Status}" Width="120"/>
+                <DataGridTextColumn Header="Плановая дата" Binding="{Binding PlannedShipmentDate, StringFormat=dd.MM.yyyy}" Width="100"/>
+                <DataGridTextColumn Header="Фактическая дата" Binding="{Binding ShipmentDate, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <DataGridTextColumn Header="Статус заказа" Binding="{Binding Order.Status, Converter={StaticResource StatusConverter}}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

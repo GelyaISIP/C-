@@ -3,34 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:helper="clr-namespace:LogisticSystem.Helper"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
          Title="Управление пользователями" Height="400" Width="600" Background="#E6E6FA">
+    <Window.Resources>
+        <helper:RoleConverter x:Key="RoleConverter"/>
+        <x:Array x:Key="RolesList" Type="sys:String">
+            <sys:String>Менеджер</sys:String>
+            <sys:String>Кладовщик</sys:String>
+            <sys:String>Клиент</sys:String>
+        </x:Array>
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Список пользователей" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+        <TextBlock Text="Список пользователей системы" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
-        <DataGrid x:Name="dgUsers" Grid.Row="1" AutoGenerateColumns="False">
+        <DataGrid x:Name="dgUsers" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="False" SelectionMode="Single" SelectionUnit="FullRow" Background="White" AlternatingRowBackground="#F5F5F5">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="150"/>
-                <DataGridTextColumn Header="Роль" Binding="{Binding Role}" Width="120"/>
-                <DataGridTemplateColumn Header="Действия" Width="150">
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="120" IsReadOnly="True"/>
+
+                <!-- Колонка роль с ComboBox, обновляющим свойство Role через TwoWay binding -->
+                <DataGridTemplateColumn Header="Роль" Width="150">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="Назначить менеджером" Tag="Manager" Click="ChangeRole_Click" Margin="2" Height="25"/>
-                                <Button Content="Назначить кладовщиком" Tag="WarehouseKeeper" Click="ChangeRole_Click" Margin="2" Height="25"/>
-                                <Button Content="Назначить клиентом" Tag="Client" Click="ChangeRole_Click" Margin="2" Height="25"/>
-                            </StackPanel>
+                            <ComboBox ItemsSource="{StaticResource RolesList}" 
+                                      SelectedItem="{Binding Role, Converter={StaticResource RoleConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Background="White"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Действие" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Сохранить" Click="SaveRole_Click" Tag="{Binding}" Background="#4B0082" Foreground="White" Width="80" Height="25"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="Обновить" Click="Refresh_Click" Width="100" Margin="5" Background="#4B0082" Foreground="White"/>
+            <Button Content="Закрыть" Click="Close_Click" Width="100" Margin="5" Background="#4B0082" Foreground="White"/>
+        </StackPanel>
     </Grid>
 </Window>

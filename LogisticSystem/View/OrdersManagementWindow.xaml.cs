@@ -40,20 +40,50 @@ namespace LogisticSystem.View
         private void dgOrders_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             selectedOrder = dgOrders.SelectedItem as Order;
-            // хз на подумать
-            //btnEdit.IsEnabled = selectedOrder != null;
             btnDelete.IsEnabled = selectedOrder != null;
         }
 
-        // Хз пока, добавлять ли возможность редактировать заказы клиентов или пока удаление оставить. Потом решу
-        //private void EditOrder_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (selectedOrder == null) return;
-        //    // Можно открыть окно редактирования заказа (изменение статуса, состава товаров)
-        //    var editWin = new EditOrderWindow(db, selectedOrder);
-        //    if (editWin.ShowDialog() == true)
-        //        LoadOrders();
-        //}
+        private void ApplyFilter_Click(object sender, RoutedEventArgs e)
+        {
+            LoadOrdersWithFilters();
+        }
+
+        private void ResetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            cbStatusFilter.SelectedIndex = 0;
+            dpStartDate.SelectedDate = null;
+            dpEndDate.SelectedDate = null;
+            tbSearch.Text = "";
+            LoadOrdersWithFilters();
+        }
+
+        private void LoadOrdersWithFilters()
+        {
+            var query = db.Orders.Include("Client").AsQueryable();
+
+            // Фильтр по статусу
+            var selectedStatus = (cbStatusFilter.SelectedItem as ComboBoxItem)?.Content.ToString();
+            if (selectedStatus != null && selectedStatus != "Все")
+            {
+                string engStatus = selectedStatus == "Новый" ? "New" : (selectedStatus == "Отгружен" ? "Shipped" : "Completed");
+                query = query.Where(o => o.Status == engStatus);
+            }
+
+            // Фильтр по датам
+            if (dpStartDate.SelectedDate != null)
+                query = query.Where(o => o.OrderDate >= dpStartDate.SelectedDate.Value);
+            if (dpEndDate.SelectedDate != null)
+                query = query.Where(o => o.OrderDate <= dpEndDate.SelectedDate.Value.AddDays(1));
+
+            // Поиск по клиенту (имя или логин)
+            if (!string.IsNullOrWhiteSpace(tbSearch.Text))
+            {
+                string search = tbSearch.Text.Trim();
+                query = query.Where(o => o.Client.Name.Contains(search));
+            }
+
+            dgOrders.ItemsSource = query.OrderByDescending(o => o.OrderDate).ToList();
+        }
 
         private void DeleteOrder_Click(object sender, RoutedEventArgs e)
         {
@@ -66,6 +96,46 @@ namespace LogisticSystem.View
                 db.SaveChanges();
                 LoadOrders();
             }
+        }
+
+        private void ChangeStatus_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedOrder = dgOrders.SelectedItem as Order;
+            if (selectedOrder == null)
+            {
+                MessageBox.Show("Выберите заказ");
+                return;
+            }
+
+            var dialog = new Window
+            {
+                Title = "Изменение статуса заказа",
+                Width = 300,
+                Height = 150,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Content = new StackPanel
+                {
+                    Margin = new Thickness(10),
+                    Children =
+            {
+                new TextBlock { Text = "Выберите новый статус:" },
+                new ComboBox { Name = "cbStatus", ItemsSource = new[] { "Новый", "Отгружен", "Завершён" }, SelectedIndex = 0 },
+                new Button { Content = "Сохранить", Margin = new Thickness(0,10,0,0), HorizontalAlignment = HorizontalAlignment.Right, Width = 80 }
+            }
+                }
+            };
+            var btn = (dialog.Content as StackPanel).Children[2] as Button;
+            btn.Click += (s, args) =>
+            {
+                var combo = (dialog.Content as StackPanel).Children[1] as ComboBox;
+                string newStatusRus = combo.SelectedItem.ToString();
+                string newStatusEng = newStatusRus == "Новый" ? "New" : (newStatusRus == "Отгружен" ? "Shipped" : "Completed");
+                selectedOrder.Status = newStatusEng;
+                db.SaveChanges();
+                LoadOrdersWithFilters();
+                dialog.Close();
+            };
+            dialog.ShowDialog();
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)

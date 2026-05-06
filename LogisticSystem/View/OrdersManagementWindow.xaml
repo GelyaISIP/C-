@@ -3,27 +3,60 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helper="clr-namespace:LogisticSystem.Helper"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
-         Title="Управление заказами" Height="500" Width="600" Background="#E6E6FA">
+       Title="Управление заказами" Height="550" Width="700" Background="#E6E6FA">
+    <Window.Resources>
+        <helper:StatusConverter x:Key="StatusConverter"/>
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <!-- На подумать пока что -->
-            <!-- <Button Content="Редактировать" Width="100" Margin="5" x:Name="btnEdit" IsEnabled="False" Click="EditOrder_Click" Background="#4B0082" Foreground="White"/> -->
-            <Button Content="Удалить" Width="100" Margin="5" x:Name="btnDelete" IsEnabled="False" Click="DeleteOrder_Click" Background="#4B0082" Foreground="White"/>
-            <Button Content="Обновить" Width="100" Margin="5" Click="Refresh_Click" Background="#4B0082" Foreground="White"/>
-        </StackPanel>
-        <DataGrid x:Name="dgOrders" Grid.Row="1" AutoGenerateColumns="False" SelectionChanged="dgOrders_SelectionChanged">
+
+        <!-- Панель фильтров -->
+        <WrapPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="Статус:" VerticalAlignment="Center" Margin="5,0"/>
+            <ComboBox x:Name="cbStatusFilter" Width="120" Margin="0,0,15,0">
+                <ComboBoxItem Content="Все" IsSelected="True"/>
+                <ComboBoxItem Content="Новый"/>
+                <ComboBoxItem Content="Отгружен"/>
+                <ComboBoxItem Content="Завершён"/>
+            </ComboBox>
+
+            <TextBlock Text="Дата с:" VerticalAlignment="Center" Margin="5,0"/>
+            <DatePicker x:Name="dpStartDate" Width="110" Margin="0,0,5,0"/>
+
+            <TextBlock Text="по:" VerticalAlignment="Center" Margin="5,0"/>
+            <DatePicker x:Name="dpEndDate" Width="110" Margin="0,0,15,0"/>
+
+            <TextBlock Text="Поиск (клиент):" VerticalAlignment="Center" Margin="5,0"/>
+            <TextBox x:Name="tbSearch" Width="150" Margin="0,0,15,0"/>
+
+            <Button Content="Применить фильтр" Click="ApplyFilter_Click" Width="120" Background="#4B0082" Foreground="White"/>
+            <Button Content="Сбросить" Click="ResetFilter_Click" Width="100" Margin="10,0,0,0" Background="#4B0082" Foreground="White"/>
+        </WrapPanel>
+
+        <!-- DataGrid с явными колонками -->
+        <DataGrid x:Name="dgOrders" Grid.Row="1" AutoGenerateColumns="False" 
+                  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow"
+                  Background="White" AlternatingRowBackground="#F5F5F5">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Клиент" Binding="{Binding Client.Name}" Width="150"/>
-                <DataGridTextColumn Header="Дата" Binding="{Binding OrderDate, StringFormat=dd.MM.yyyy}" Width="100"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="100"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Client.Name}" Width="200"/>
+                <DataGridTextColumn Header="Дата заказа" Binding="{Binding OrderDate, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status, Converter={StaticResource StatusConverter}}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- Панель кнопок -->
+        <WrapPanel Grid.Row="2" Margin="0,10,0,0" HorizontalAlignment="Center">
+            <Button Content="Обновить" Width="100" Margin="5" Click="Refresh_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Изменить статус" Width="120" Margin="5" Click="ChangeStatus_Click" Background="#4B0082" Foreground="White"/>
+            <Button x:Name="btnDelete" Content="Удалить" Width="100" Margin="5" IsEnabled="False" Click="DeleteOrder_Click" Background="#4B0082" Foreground="White"/>
+        </WrapPanel>
     </Grid>
 </Window>

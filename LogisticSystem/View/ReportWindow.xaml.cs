@@ -1,4 +1,5 @@
 ﻿using LogisticSystem.Data;
+using LogisticSystem.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,9 @@ namespace LogisticSystem.View
                     break;
                 case "Пользователи":
                     ShowUsersReport();
+                    break;
+                case "Просроченные отгрузки":
+                    ShowOverdueShipmentsReport();
                     break;
             }
         }
@@ -118,5 +122,65 @@ namespace LogisticSystem.View
             dgReport.Columns.Add(new DataGridTextColumn { Header = "Количество", Binding = new Binding("Count") });
             dgReport.ItemsSource = query.ToList();
         }
+
+        private void ShowOverdueShipmentsReport()
+        {
+            var today = DateTime.Now.Date;
+            var converter = new StatusConverter();
+
+            // 1. Получаем данные из БД без сложных вычислений
+            var shipments = db.Shipments
+                .Include("Order")
+                .Include("Order.Client")
+                .Where(s => s.Order.Status != "Completed" && s.ShipmentDate == null && s.PlannedShipmentDate < today)
+                .ToList();
+
+            // 2. Добавляем отгрузки, где заказ завершён, но отгрузка просрочена
+            var completedShipments = db.Shipments
+                .Include("Order")
+                .Include("Order.Client")
+                .Where(s => s.Order.Status == "Completed" && s.ShipmentDate != null && s.ShipmentDate > s.PlannedShipmentDate)
+                .ToList();
+
+            shipments.AddRange(completedShipments);
+
+            // 3. Проецируем в удобный для отображения вид (уже в памяти)
+            var overdue = shipments.Select(s => new
+            {
+                Заказ = s.OrderId,
+                Клиент = s.Order.Client != null ? s.Order.Client.Name : "Неизвестно",
+                ПлановаяДата = s.PlannedShipmentDate,
+                ФактическаяДата = s.ShipmentDate,
+                СтатусЗаказа = s.Order.Status,
+                ПросрочкаДней = (s.ShipmentDate != null && s.ShipmentDate > s.PlannedShipmentDate)
+                    ? (s.ShipmentDate.Value - s.PlannedShipmentDate).Days
+                    : (s.ShipmentDate == null && s.PlannedShipmentDate < today)
+                        ? (today - s.PlannedShipmentDate).Days
+                        : 0
+            }).ToList();
+
+            dgReport.Columns.Clear();
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Заказ", Binding = new Binding("Заказ") });
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Клиент", Binding = new Binding("Клиент") });
+            dgReport.Columns.Add(new DataGridTextColumn
+            {
+                Header = "Плановая дата",
+                Binding = new Binding("ПлановаяДата") { StringFormat = "dd.MM.yyyy" }
+            });
+            dgReport.Columns.Add(new DataGridTextColumn
+            {
+                Header = "Фактическая дата",
+                Binding = new Binding("ФактическаяДата") { StringFormat = "dd.MM.yyyy" }
+            });
+
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Статус заказа", Binding = new Binding("СтатусЗаказа") { Converter = converter } });
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Просрочка (дней)", Binding = new Binding("ПросрочкаДней") });
+            dgReport.ItemsSource = overdue;
+
+            if (!overdue.Any())
+                MessageBox.Show("Нет просроченных отгрузок", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+
     }
 }

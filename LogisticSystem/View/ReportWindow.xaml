@@ -19,6 +19,7 @@
                 <ComboBoxItem Content="Отгрузки" IsSelected="True"/>
                 <ComboBoxItem Content="Заказы"/>
                 <ComboBoxItem Content="Пользователи"/>
+                <ComboBoxItem Content="Просроченные отгрузки"/>
             </ComboBox>
 
             <TextBlock Text="с:" VerticalAlignment="Center" Margin="10,0,5,0"/>

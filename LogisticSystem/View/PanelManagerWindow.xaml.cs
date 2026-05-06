@@ -17,11 +17,11 @@ using System.Windows.Shapes;
 namespace LogisticSystem.View
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для PanelManagerWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PanelManagerWindow : Window
     {
-        public MainWindow()
+        public PanelManagerWindow()
         {
             InitializeComponent();
         }
@@ -70,7 +70,12 @@ namespace LogisticSystem.View
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Close();
+            var authWin = Application.Current.Windows.OfType<AuthorizeWindow>().FirstOrDefault();
+            if (authWin != null)
+                authWin.Show();
+            else
+                new AuthorizeWindow().Show();
         }
     }
 }

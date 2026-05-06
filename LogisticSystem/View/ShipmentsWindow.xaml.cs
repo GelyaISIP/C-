@@ -34,17 +34,7 @@ namespace LogisticSystem.View
 
         private void LoadFilters()
         {
-            // Загрузка складов для фильтра
-            var warehouses = db.Warehouses.ToList();
-            cbWarehouseFilter.ItemsSource = warehouses;
-            cbWarehouseFilter.DisplayMemberPath = "Name";
-            cbWarehouseFilter.SelectedValuePath = "Id";
-
-            // Загрузка клиентов для фильтра
-            var clients = db.Clients.OrderBy(c => c.Name).ToList();
-            cbClientFilter.ItemsSource = clients;
-            cbClientFilter.DisplayMemberPath = "Name";
-            cbClientFilter.SelectedValuePath = "Id";
+            cbWarehouseFilter.ItemsSource = db.Warehouses.ToList();
         }
 
         private void LoadShipments()
@@ -55,28 +45,28 @@ namespace LogisticSystem.View
                          .Include("Warehouse")
                          .AsQueryable();
 
-            // Фильтр по складу
             if (cbWarehouseFilter.SelectedValue != null && (int)cbWarehouseFilter.SelectedValue > 0)
                 query = query.Where(s => s.WarehouseId == (int)cbWarehouseFilter.SelectedValue);
 
-            // Фильтр по клиенту (через связанный заказ)
-            if (cbClientFilter.SelectedValue != null && (int)cbClientFilter.SelectedValue > 0)
-                query = query.Where(s => s.Order.ClientId == (int)cbClientFilter.SelectedValue);
+            if (!string.IsNullOrWhiteSpace(tbClientSearch.Text))
+            {
+                string search = tbClientSearch.Text.Trim();
+                query = query.Where(s => s.Order.Client.Name.Contains(search));
+            }
 
-            // Фильтр по статусу заказа
-            var statusFilter = (cbStatusFilter.SelectedItem as ComboBoxItem)?.Content.ToString();
-            if (statusFilter != null && statusFilter != "Все")
-                query = query.Where(s => s.Order.Status == statusFilter);
+            string selectedStatus = (cbStatusFilter.SelectedItem as ComboBoxItem)?.Content.ToString();
+            if (selectedStatus != null && selectedStatus != "Все")
+            {
+                string engStatus = selectedStatus == "Новый" ? "New" : (selectedStatus == "Отгружен" ? "Shipped" : "Completed");
+                query = query.Where(s => s.Order.Status == engStatus);
+            }
 
-            // Фильтр по начальной дате
             if (dpStartDate.SelectedDate != null)
-                query = query.Where(s => s.ShipmentDate >= dpStartDate.SelectedDate);
-
-            // Фильтр по конечной дате
+                query = query.Where(s => s.PlannedShipmentDate >= dpStartDate.SelectedDate);
             if (dpEndDate.SelectedDate != null)
-                query = query.Where(s => s.ShipmentDate <= dpEndDate.SelectedDate.Value.AddDays(1));
+                query = query.Where(s => s.PlannedShipmentDate <= dpEndDate.SelectedDate.Value.AddDays(1));
 
-            dgShipments.ItemsSource = query.OrderByDescending(s => s.ShipmentDate).ToList();
+            dgShipments.ItemsSource = query.OrderByDescending(s => s.PlannedShipmentDate).ToList();
         }
 
         private void ApplyFilter_Click(object sender, RoutedEventArgs e)
@@ -87,8 +77,8 @@ namespace LogisticSystem.View
         private void ResetFilters_Click(object sender, RoutedEventArgs e)
         {
             cbWarehouseFilter.SelectedValue = null;
-            cbClientFilter.SelectedValue = null;
-            cbStatusFilter.SelectedIndex = 0; // "Все"
+            tbClientSearch.Text = "";
+            cbStatusFilter.SelectedIndex = 0;
             dpStartDate.SelectedDate = null;
             dpEndDate.SelectedDate = null;
             LoadShipments();
@@ -99,6 +89,7 @@ namespace LogisticSystem.View
             selectedShipment = dgShipments.SelectedItem as Shipment;
             btnEdit.IsEnabled = selectedShipment != null;
             btnDelete.IsEnabled = selectedShipment != null;
+            btnConfirm.IsEnabled = selectedShipment != null && selectedShipment.ShipmentDate == null;
         }
 
         private void AddShipment_Click(object sender, RoutedEventArgs e)
@@ -130,6 +121,22 @@ namespace LogisticSystem.View
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             LoadShipments();
+        }
+
+        private void ConfirmShipment_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedShipment == null || selectedShipment.ShipmentDate != null) return;
+            selectedShipment.ShipmentDate = DateTime.Now;
+            var order = selectedShipment.Order;
+            if (order != null && order.Status != "Completed")
+                order.Status = "Shipped";
+            db.SaveChanges();
+            LoadShipments();
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -25,7 +25,6 @@ namespace LogisticSystem.View
         private LogisticsContext db;
         private ObservableCollection<OrderItem> orderItems = new ObservableCollection<OrderItem>();
         private User currentUser;
-        private Client currentClient;
 
         public OrderWindow()
         {

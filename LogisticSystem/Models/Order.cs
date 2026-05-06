@@ -17,5 +17,7 @@ namespace LogisticSystem.Models
         public virtual Client Client { get; set; }
         public virtual ICollection<Shipment> Shipments { get; set; }
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
+
+        public string Info => $"{Id} - {Client?.Name}";
     }
 }

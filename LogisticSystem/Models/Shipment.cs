@@ -11,7 +11,8 @@ namespace LogisticSystem.Models
         public int Id { get; set; }
         public int OrderId { get; set; }
         public int WarehouseId { get; set; }
-        public DateTime ShipmentDate { get; set; }
+        public DateTime PlannedShipmentDate { get; set; }
+        public DateTime? ShipmentDate { get; set; }
 
         public virtual Order Order { get; set; }
         public virtual Warehouse Warehouse { get; set; }

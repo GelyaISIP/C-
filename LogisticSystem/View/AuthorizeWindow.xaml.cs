@@ -26,6 +26,7 @@ namespace LogisticSystem.View
         public AuthorizeWindow()
         {
             InitializeComponent();
+            this.IsVisibleChanged += AuthorizeWindow_IsVisibleChanged;
         }
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
@@ -60,7 +61,7 @@ namespace LogisticSystem.View
                 switch (user.Role)
                 {
                     case "Manager":
-                        var mainWin = new MainWindow();
+                        var mainWin = new PanelManagerWindow();
                         mainWin.Show();
                         break;
                     case "WarehouseKeeper":
@@ -75,7 +76,7 @@ namespace LogisticSystem.View
                         MessageBox.Show("Неизвестная роль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                 }
-                this.Close();
+                this.Hide();
             }
         }
         private void btnExit_Click(object sender, RoutedEventArgs e)
@@ -93,6 +94,14 @@ namespace LogisticSystem.View
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return Convert.ToBase64String(bytes);
+            }
+        }
+        private void AuthorizeWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.IsVisible)
+            {
+                txtLogin.Text = "";
+                txtPassword.Password = "";
             }
         }
     }

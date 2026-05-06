@@ -7,13 +7,13 @@ namespace LogisticSystem.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.2")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class MakeShipmentDateNullable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(MakeShipmentDateNullable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202605040347558_InitialCreate"; }
+            get { return "202605060411124_MakeShipmentDateNullable"; }
         }
         
         string IMigrationMetadata.Source

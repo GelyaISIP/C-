@@ -65,9 +65,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\RoleConverter.cs" />
+    <Compile Include="Helper\StatusConverter.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Migrations\202605050518292_AddRegistrationDate.cs" />
     <Compile Include="Migrations\202605050518292_AddRegistrationDate.Designer.cs">
       <DependentUpon>202605050518292_AddRegistrationDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605060410111_AddPlannedShipmentDate.cs" />
+    <Compile Include="Migrations\202605060410111_AddPlannedShipmentDate.Designer.cs">
+      <DependentUpon>202605060410111_AddPlannedShipmentDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605060411124_MakeShipmentDateNullable.cs" />
+    <Compile Include="Migrations\202605060411124_MakeShipmentDateNullable.Designer.cs">
+      <DependentUpon>202605060411124_MakeShipmentDateNullable.cs</DependentUpon>
     </Compile>
     <Compile Include="View\AddProductToOrderWindow.xaml.cs">
       <DependentUpon>AddProductToOrderWindow.xaml</DependentUpon>
@@ -139,7 +151,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MainWindow.xaml">
+    <Page Include="View\PanelManagerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -147,8 +159,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="View\PanelManagerWindow.xaml.cs">
+      <DependentUpon>PanelManagerWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\OrdersManagementWindow.xaml">
@@ -192,6 +204,12 @@
     </Compile>
     <EmbeddedResource Include="Migrations\202605050518292_AddRegistrationDate.resx">
       <DependentUpon>202605050518292_AddRegistrationDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605060410111_AddPlannedShipmentDate.resx">
+      <DependentUpon>202605060410111_AddPlannedShipmentDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605060411124_MakeShipmentDateNullable.resx">
+      <DependentUpon>202605060411124_MakeShipmentDateNullable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
-        Title="Отгрузка" Height="180" Width="400" Background="#E6E6FA">
+        Title="Отгрузка" Height="650" Width="700" Background="#E6E6FA">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,24 +13,57 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Заказ:" Margin="5" VerticalAlignment="Center"/>
-        <ComboBox x:Name="cbOrder" Grid.Row="0" Grid.Column="1" Margin="5" DisplayMemberPath="Id" SelectedValuePath="Id"/>
+        <!-- Выбор заказа -->
+        <TextBlock Grid.Row="0" Text="Заказ:" Margin="5"/>
+        <ComboBox x:Name="cbOrder" Grid.Row="0" Margin="174,0,0,26" HorizontalAlignment="Left" Width="200"
+                  DisplayMemberPath="Info" SelectedValuePath="Id" SelectionChanged="CbOrder_SelectionChanged" Grid.RowSpan="2"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Склад:" Margin="5" VerticalAlignment="Center"/>
-        <ComboBox x:Name="cbWarehouse" Grid.Row="1" Grid.Column="1" Margin="5" DisplayMemberPath="Name" SelectedValuePath="Id" />
+        <!-- Информация о клиенте -->
+        <TextBlock Grid.Row="1" Text="Клиент:" Margin="5"/>
+        <TextBlock x:Name="tbOrderInfo" Grid.Row="1" Margin="174,0,0,26" HorizontalAlignment="Left" Grid.RowSpan="2" Width="377"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Дата отгрузки:" Margin="5" VerticalAlignment="Center"/>
-        <DatePicker x:Name="dpShipmentDate" Grid.Row="2" Grid.Column="1" Margin="5" />
+        <!-- Выбор склада для отгрузки -->
+        <TextBlock Grid.Row="2" Text="Склад отгрузки:" Margin="5"/>
+        <ComboBox x:Name="cbWarehouse" Grid.Row="1" Margin="174,23,0,3" HorizontalAlignment="Left" Width="200"
+                  DisplayMemberPath="Name" SelectedValuePath="Id" Grid.RowSpan="2"/>
 
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <Button x:Name="btnSave" Content="Сохранить" Background="#4B0082" Foreground="White" Width="80" Margin="5" Click="Save_Click"/>
-            <Button x:Name="btnCancel" Content="Отмена" Background="#4B0082" Foreground="White" Width="80" Margin="5" IsCancel="True"/>
+        <!-- Плановая дата -->
+        <TextBlock Grid.Row="3" Text="Плановая дата отгрузки:" Margin="5"/>
+        <DatePicker x:Name="dpPlannedShipmentDate" Grid.Row="3" Margin="174,0,0,5" HorizontalAlignment="Left" Width="150"/>
+
+        <!-- Вкладки с товарами и остатками -->
+        <TabControl Grid.Row="4" Margin="0,10,0,10">
+            <TabItem Header="Товары в заказе">
+                <DataGrid x:Name="dgOrderProducts" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Товар" Binding="{Binding Product.Name}" Width="*"/>
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Quantity}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Остатки на складах">
+                <DataGrid x:Name="dgStocks" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Товар" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Склад" Binding="{Binding WarehouseName}" Width="150"/>
+                        <DataGridTextColumn Header="Остаток" Binding="{Binding Quantity}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Фактическая дата (только для редактирования) -->
+        <TextBlock Grid.Row="5" Text="Фактическая дата отгрузки:" Margin="5"/>
+        <DatePicker x:Name="dpActualShipmentDate" Grid.Row="5" Margin="174,3,0,10" HorizontalAlignment="Left" Width="150"
+                    IsEnabled="{Binding IsEdit, RelativeSource={RelativeSource AncestorType=Window}}" RenderTransformOrigin="1.07,0.512"/>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button Content="Сохранить" Width="80" Margin="5" Click="Save_Click" Background="#4B0082" Foreground="White" IsDefault="True"/>
+            <Button Content="Отмена" Width="80" Margin="5" IsCancel="True" Background="#4B0082" Foreground="White"/>
         </StackPanel>
     </Grid>
 </Window>
