@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
-        Title="Система логистики" Height="630" Width="750" Background="#E6E6FA">
+        Title="Система логистики" Height="700" Width="750" Background="#E6E6FA">
     <Grid Margin="30">
         <StackPanel>
             <TextBlock Text="Панель менеджера" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,40"/>
@@ -15,6 +15,7 @@
             <Button Content="Управление отгрузками" Height="40" FontSize="18" Background="#4B0082" Foreground="White" Margin="0,10" Click="OpenShipments_Click" Width="555"/>
             <Button Content="Управление пользователями" Height="40" FontSize="18" Background="#4B0082" Foreground="White" Margin="0,10" Click="OpenUserManagement_Click" Width="555"/>
             <Button Content="Отчёты" Height="40" FontSize="18" Background="#4B0082" Foreground="White" Margin="0,10" Click="OpenReports_Click" Width="555"/>
+			<Button Content="Личный кабинет" Height="40" FontSize="18" Background="#4B0082" Foreground="White" Margin="0,10" Click="btnAccount_CLick" Width="555"/>
             <Button Content="Выход" Height="40" FontSize="18" Background="#4B0082" Foreground="White" Margin="0,50,0,0" Click="Exit_Click" Width="555"/>
         </StackPanel>
     </Grid>

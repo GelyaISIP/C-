@@ -96,6 +96,12 @@ namespace LogisticSystem.View
                 return Convert.ToBase64String(bytes);
             }
         }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Система логистики\n\nРазработчики: Донова Ангелина и Туркина Екатерина\n\nГруппа: ИСиП-23-1п");
+        }
+
         private void AuthorizeWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (this.IsVisible)

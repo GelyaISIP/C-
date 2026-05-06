@@ -25,6 +25,7 @@ namespace LogisticSystem.View
         private LogisticsContext db;
         private ObservableCollection<OrderItem> orderItems = new ObservableCollection<OrderItem>();
         private User currentUser;
+        private int currentClientId; // ID клиента, связанного с текущим пользователем (или служебного)
 
         public OrderWindow()
         {
@@ -41,8 +42,55 @@ namespace LogisticSystem.View
             {
                 MessageBox.Show("Ошибка авторизации. Закройте окно.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
+                return;
+            }
+
+            // Определяем clientId для текущего пользователя (для создания заказа и истории)
+            if (currentUser.Role == "Client")
+            {
+                var client = db.Clients.FirstOrDefault(c => c.UserId == currentUser.Id);
+                if (client == null)
+                {
+                    MessageBox.Show("Для вашего аккаунта не найден клиент. Обратитесь к администратору.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Close();
+                    return;
+                }
+                currentClientId = client.Id;
+            }
+            else // Manager или WarehouseKeeper (если разрешено)
+            {
+                var serviceClient = db.Clients.FirstOrDefault(c => c.Name == "Служебный (менеджер)");
+                if (serviceClient == null)
+                {
+                    serviceClient = new Client { Name = "Служебный (менеджер)" };
+                    db.Clients.Add(serviceClient);
+                    db.SaveChanges();
+                }
+                currentClientId = serviceClient.Id;
             }
         }
+
+        private void LoadOrderHistory()
+        {
+            // Загружаем заказы, привязанные к currentClientId
+            var orders = db.Orders
+                .Include("OrderProducts")
+                .Where(o => o.ClientId == currentClientId)
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+            dgOrderHistory.ItemsSource = orders;
+        }
+
+        private void TabHistory_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // При переключении на вкладку "История" загружаем данные
+            LoadOrderHistory();
+        }
+
+        // Остальные методы (btnAddProduct_Click, btnSaveOrder_Click, btnAccount_Click) остаются без изменений,
+        // кроме того, что clientId теперь берётся из поля currentClientId.
+        // В btnSaveOrder_Click замените получение clientId на использование currentClientId.
+        // Также удалите дублирующий поиск клиента.
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
@@ -59,34 +107,9 @@ namespace LogisticSystem.View
                 return;
             }
 
-            int clientId;
-
-            if (currentUser.Role == "Client")
-            {
-                var client = db.Clients.FirstOrDefault(c => c.UserId == currentUser.Id);
-                if (client == null)
-                {
-                    MessageBox.Show("Для вашего аккаунта не найден клиент. Обратитесь к администратору.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                clientId = client.Id;
-            }
-            else // Manager (или другие роли, которые могут оформлять заказы)
-            {
-                // Автоматическое создание служебного клиента, если его ещё нет
-                var serviceClient = db.Clients.FirstOrDefault(c => c.Name == "Служебный (менеджер)");
-                if (serviceClient == null)
-                {
-                    serviceClient = new Client { Name = "Служебный (менеджер)" };
-                    db.Clients.Add(serviceClient);
-                    db.SaveChanges();
-                }
-                clientId = serviceClient.Id;
-            }
-
             var order = new Order
             {
-                ClientId = clientId,
+                ClientId = currentClientId,
                 OrderDate = dpOrderDate.SelectedDate ?? DateTime.Now,
                 Status = "New"
             };
@@ -121,7 +144,8 @@ namespace LogisticSystem.View
                         context.SaveChanges();
                         transaction.Commit();
                         MessageBox.Show("Заказ успешно оформлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Close();
+                        orderItems.Clear(); // очищаем список товаров
+                        // Если нужно, можно обновить историю (но вкладка не активна)
                     }
                     catch (Exception ex)
                     {
@@ -130,6 +154,12 @@ namespace LogisticSystem.View
                     }
                 }
             }
+        }
+
+        private void btnAccount_Click(object sender, RoutedEventArgs e)
+        {
+            var clientWindow = new ClientAccountWindow(currentUser);
+            clientWindow.Show();
         }
     }
 
