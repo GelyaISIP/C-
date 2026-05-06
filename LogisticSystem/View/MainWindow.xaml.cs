@@ -1,4 +1,5 @@
-﻿using LogisticSystem.View;
+﻿using LogisticSystem.Models;
+using LogisticSystem.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace LogisticSystem.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private User currentUser;
         public MainWindow()
         {
             InitializeComponent();
@@ -66,6 +68,11 @@ namespace LogisticSystem.View
         {
             var orderWin = new OrderWindow();
             orderWin.Show();
+        }
+        private void btnAccount_CLick(object sender, RoutedEventArgs e)
+        {
+            var clientWindow = new ClientAccountWindow(currentUser);
+            clientWindow.Show();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

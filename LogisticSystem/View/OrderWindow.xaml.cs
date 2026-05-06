@@ -132,6 +132,11 @@ namespace LogisticSystem.View
                 }
             }
         }
+        private void btnAccount_Click(object sender, EventArgs e)
+        {
+            var clientWindow = new ClientAccountWindow(currentUser);
+            clientWindow.Show();
+        }
     }
 
     public class OrderItem

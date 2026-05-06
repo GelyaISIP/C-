@@ -34,8 +34,10 @@
             </Grid>
         </GroupBox>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button x:Name="btnAddProduct" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Добавить товар" Width="130" Height="35" Margin="0,0,10,0" Click="btnAddProduct_Click"></Button>
-            <Button x:Name="btnSaveOrder" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Оформить заказ" Width="130" Height="35" Click="btnSaveOrder_Click"></Button>
+            <Button x:Name="btnAddProduct" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Добавить товар" Width="130" Height="35" Margin="0,0,20,0" Click="btnAddProduct_Click"></Button>
+            <Button x:Name="btnSaveOrder" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Оформить заказ" Width="130" Height="35" Margin="0,0,15,0" Click="btnSaveOrder_Click"></Button>
+            <Button x:Name="btnAccount" Background="#4B0082" Foreground="White" FontWeight="Bold" Content="Личный кабинет" Width="130" Height="35" Margin="0,0,10,0" Click="btnAccount_Click"></Button>
+
         </StackPanel>
     </Grid>
 

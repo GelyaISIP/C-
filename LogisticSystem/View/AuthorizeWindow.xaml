@@ -6,6 +6,13 @@
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
         Title="Авторизация" Height="480" Width="400" Background="#E6E6FA">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="#E6E6FA">
+            <MenuItem Header="Справка">
+                <MenuItem Header="О программе" Click="About_Click"/>
+            </MenuItem>
+        </Menu>
+
     <StackPanel Margin="20">
         <TextBlock Text="Система логистики" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
         
@@ -20,4 +27,5 @@
 		<Button Content="Регистрация" Foreground="White" Height="40" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnRegistration_Click"></Button>
 
 	</StackPanel>
+    </DockPanel>
 </Window>
