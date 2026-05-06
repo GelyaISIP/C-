@@ -31,28 +31,17 @@ namespace LogisticSystem.View
         {
             InitializeComponent();
             db = new LogisticsContext();
-            LoadCurrentClient();
+            LoadCurrentUser();
             dgOrderItems.ItemsSource = orderItems;
         }
 
-        private void LoadCurrentClient()
+        private void LoadCurrentUser()
         {
-            // Получаем текущего пользователя, сохранённого при авторизации
             currentUser = Application.Current.Properties["CurrentUser"] as User;
             if (currentUser == null)
             {
-                MessageBox.Show("Ошибка: пользователь не авторизован.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Ошибка авторизации. Закройте окно.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
-                return;
-            }
-
-            // Находим клиента, связанного с этим пользователем
-            currentClient = db.Clients.FirstOrDefault(c => c.UserId == currentUser.Id);
-            if (currentClient == null)
-            {
-                MessageBox.Show("Для вашего аккаунта не найден клиент. Обратитесь к администратору.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-                return;
             }
         }
 
@@ -60,9 +49,7 @@ namespace LogisticSystem.View
         {
             var addWindow = new AddProductToOrderWindow(db);
             if (addWindow.ShowDialog() == true)
-            {
                 orderItems.Add(addWindow.SelectedOrderItem);
-            }
         }
 
         private void btnSaveOrder_Click(object sender, RoutedEventArgs e)
@@ -73,12 +60,35 @@ namespace LogisticSystem.View
                 return;
             }
 
-            DateTime orderDate = dpOrderDate.SelectedDate ?? DateTime.Now;
+            int clientId;
+
+            if (currentUser.Role == "Client")
+            {
+                var client = db.Clients.FirstOrDefault(c => c.UserId == currentUser.Id);
+                if (client == null)
+                {
+                    MessageBox.Show("Для вашего аккаунта не найден клиент. Обратитесь к администратору.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                clientId = client.Id;
+            }
+            else // Manager (или другие роли, которые могут оформлять заказы)
+            {
+                // Автоматическое создание служебного клиента, если его ещё нет
+                var serviceClient = db.Clients.FirstOrDefault(c => c.Name == "Служебный (менеджер)");
+                if (serviceClient == null)
+                {
+                    serviceClient = new Client { Name = "Служебный (менеджер)" };
+                    db.Clients.Add(serviceClient);
+                    db.SaveChanges();
+                }
+                clientId = serviceClient.Id;
+            }
 
             var order = new Order
             {
-                ClientId = currentClient.Id,
-                OrderDate = orderDate,
+                ClientId = clientId,
+                OrderDate = dpOrderDate.SelectedDate ?? DateTime.Now,
                 Status = "New"
             };
 
@@ -93,7 +103,6 @@ namespace LogisticSystem.View
 
                         foreach (var item in orderItems)
                         {
-                            // Проверка остатков на складе
                             var stock = context.Stocks.FirstOrDefault(s => s.ProductId == item.ProductId && s.WarehouseId == item.WarehouseId);
                             if (stock == null || stock.Quantity < item.Quantity)
                             {

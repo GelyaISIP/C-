@@ -83,7 +83,7 @@ namespace LogisticSystem.View
         {
             if (!dpStart.SelectedDate.HasValue || !dpEnd.SelectedDate.HasValue)
             {
-                MessageBox.Show("Выберите период");
+                MessageBox.Show("Выберите период", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             var start = dpStart.SelectedDate.Value;
@@ -91,13 +91,20 @@ namespace LogisticSystem.View
 
             var query = from o in db.Orders
                         where o.OrderDate >= start && o.OrderDate < end
-                        group o by o.Status into g
-                        select new { Status = g.Key, Count = g.Count() };
+                        select new
+                        {
+                            CustomerName = (o.Client.Name == "Служебный (менеджер)") ? "Менеджер" : o.Client.Name,
+                            o.Status
+                        };
+
+            var grouped = query.GroupBy(x => x.CustomerName)
+                               .Select(g => new { CustomerName = g.Key, OrderCount = g.Count() })
+                               .ToList();
 
             dgReport.Columns.Clear();
-            dgReport.Columns.Add(new DataGridTextColumn { Header = "Статус", Binding = new System.Windows.Data.Binding("Status") });
-            dgReport.Columns.Add(new DataGridTextColumn { Header = "Количество", Binding = new System.Windows.Data.Binding("Count") });
-            dgReport.ItemsSource = query.ToList();
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Заказчик", Binding = new Binding("CustomerName") });
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Количество заказов", Binding = new Binding("OrderCount") });
+            dgReport.ItemsSource = grouped;
         }
 
         private void ShowUsersReport()
@@ -107,8 +114,8 @@ namespace LogisticSystem.View
                         select new { Role = g.Key, Count = g.Count() };
 
             dgReport.Columns.Clear();
-            dgReport.Columns.Add(new DataGridTextColumn { Header = "Роль", Binding = new System.Windows.Data.Binding("Role") });
-            dgReport.Columns.Add(new DataGridTextColumn { Header = "Количество", Binding = new System.Windows.Data.Binding("Count") });
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Роль", Binding = new Binding("Role") });
+            dgReport.Columns.Add(new DataGridTextColumn { Header = "Количество", Binding = new Binding("Count") });
             dgReport.ItemsSource = query.ToList();
         }
     }
