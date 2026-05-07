@@ -1,0 +1,97 @@
+﻿<Window x:Class="LogisticSystem.View.ShipmentsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helper="clr-namespace:LogisticSystem.Helper"
+        xmlns:local="clr-namespace:LogisticSystem"
+        mc:Ignorable="d"
+        Title="Управление отгрузками" Height="500" Width="750" Background="#E6E6FA">
+    <Window.Resources>
+        <helper:StatusConverter x:Key="StatusConverter"/>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Center">
+            <Button Content="Добавить отгрузку" Width="120" Margin="5" Click="AddShipment_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Подтвердить отгрузку" Width="140" Margin="5" x:Name="btnConfirm" IsEnabled="False" Click="ConfirmShipment_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Редактировать" Width="100" Margin="5" x:Name="btnEdit" IsEnabled="False" Click="EditShipment_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Удалить" Width="100" Margin="5" x:Name="btnDelete" IsEnabled="False" Click="DeleteShipment_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Обновить" Width="100" Margin="5" Click="Refresh_Click" Background="#4B0082" Foreground="White"/>
+            <Button Content="Выйти" Width="100" Margin="5" Click="Exit_Click" Background="#4B0082" Foreground="White" FontWeight="Bold"/>
+        </StackPanel>
+
+        <GroupBox Grid.Row="1" Header="Фильтры" Margin="0,0,0,10">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Первая строка -->
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
+                    <TextBlock Text="Склад:"/>
+                    <ComboBox x:Name="cbWarehouseFilter" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" Margin="5">
+                    <TextBlock Text="Клиент:"/>
+                    <TextBox x:Name="tbClientSearch" Width="250"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
+                    <TextBlock Text="Статус заказа:"/>
+                    <ComboBox x:Name="cbStatusFilter">
+                        <ComboBoxItem Content="Все" IsSelected="True"/>
+                        <ComboBoxItem Content="Новый"/>
+                        <ComboBoxItem Content="Отгружен"/>
+                        <ComboBoxItem Content="Завершён"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Вторая строка -->
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+                    <TextBlock Text="Плановая дата:"/>
+                    <DatePicker x:Name="dpStartDate"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
+                    <TextBlock Text="Конечная дата:"/>
+                    <DatePicker x:Name="dpEndDate"/>
+                </StackPanel>
+                <Button Grid.Row="1" Grid.Column="2" Content="Применить фильтры" Margin="5" 
+                Click="ApplyFilter_Click" Background="#4B0082" Foreground="White" FontWeight="Bold" 
+                VerticalAlignment="Bottom" Height="30"/>
+
+                <!-- Третья строка: кнопка сброса -->
+                <Button Grid.Row="2" Grid.ColumnSpan="3" Content="Сбросить фильтры" Width="120" Margin="5" 
+                Click="ResetFilters_Click" HorizontalAlignment="Right" 
+                Background="#9D81BA" Foreground="White"/>
+
+                <Button Grid.Row="2" Grid.ColumnSpan="1" x:Name="btnAccount" Content="Личный кабинет" Width="120" Margin="5" 
+                Click="btnAccount_Click" HorizontalAlignment="Left" 
+                Background="#4B0082" Foreground="White"/>
+            </Grid>
+        </GroupBox>
+        <DataGrid x:Name="dgShipments" Grid.Row="2" AutoGenerateColumns="False" 
+                  SelectionChanged="dgShipments_SelectionChanged" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Заказ №" Binding="{Binding OrderId}" Width="70"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Order.Client.Name}" Width="150"/>
+                <DataGridTextColumn Header="Склад" Binding="{Binding Warehouse.Name}" Width="120"/>
+                <DataGridTextColumn Header="Плановая дата" Binding="{Binding PlannedShipmentDate, StringFormat=dd.MM.yyyy}" Width="100"/>
+                <DataGridTextColumn Header="Фактическая дата" Binding="{Binding ShipmentDate, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <DataGridTextColumn Header="Статус заказа" Binding="{Binding Order.Status, Converter={StaticResource StatusConverter}}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

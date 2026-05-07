@@ -1,0 +1,31 @@
+﻿<Window x:Class="LogisticSystem.View.AuthorizeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogisticSystem"
+        mc:Ignorable="d"
+        Title="Авторизация" Height="480" Width="400" Background="#E6E6FA">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="#E6E6FA">
+            <MenuItem Header="Справка">
+                <MenuItem Header="О программе" Click="About_Click"/>
+            </MenuItem>
+        </Menu>
+
+    <StackPanel Margin="20">
+        <TextBlock Text="Система логистики" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
+        
+        <TextBlock Text="Логин" FontSize="16" Margin="0,10,0,5"/>
+        <TextBox x:Name="txtLogin" Height="35" VerticalContentAlignment="Center" Padding="10,0"/>
+
+        <TextBlock Text="Пароль" FontSize="16"  Margin="0,20,0,5"/>
+        <PasswordBox x:Name="txtPassword" Height="35" VerticalContentAlignment="Center" Padding="10,0"/>
+
+        <Button Content="Вход" Foreground="White" Height="40" Margin="0,30,0,10" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnLogin_Click"></Button>
+        <Button Content="Выход" Foreground="White" Height="40" Margin="0,0,0,10" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnExit_Click"></Button>
+		<Button Content="Регистрация" Foreground="White" Height="40" FontSize="24" FontWeight="Bold" Background="#4B0082" Click="btnRegistration_Click"></Button>
+
+	</StackPanel>
+    </DockPanel>
+</Window>
