@@ -75,6 +75,10 @@
                 <Button Grid.Row="2" Grid.ColumnSpan="3" Content="Сбросить фильтры" Width="120" Margin="5" 
                 Click="ResetFilters_Click" HorizontalAlignment="Right" 
                 Background="#9D81BA" Foreground="White"/>
+
+                <Button Grid.Row="2" Grid.ColumnSpan="1" x:Name="btnAccount" Content="Личный кабинет" Width="120" Margin="5" 
+                Click="btnAccount_Click" HorizontalAlignment="Left" 
+                Background="#4B0082" Foreground="White"/>
             </Grid>
         </GroupBox>
         <DataGrid x:Name="dgShipments" Grid.Row="2" AutoGenerateColumns="False" 

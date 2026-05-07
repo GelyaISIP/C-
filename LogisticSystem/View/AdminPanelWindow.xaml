@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
-        Title="AdminPanelWindow" Height="420" Width="600" Background="#E6E6FA">
+        Title="Добавление товара и складов" Height="420" Width="600" Background="#E6E6FA">
     <Grid Margin="10">
         <TabControl Background="#E6E6FA">
             <TabControl.Resources>

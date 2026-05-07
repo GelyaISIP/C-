@@ -134,6 +134,18 @@ namespace LogisticSystem.View
             LoadShipments();
         }
 
+        private void btnAccount_Click(object sender, RoutedEventArgs e)
+        {
+            var currentUser = Application.Current.Properties["CurrentUser"] as User;
+            if (currentUser == null)
+            {
+                MessageBox.Show("Ошибка авторизации. Пожалуйста, войдите заново.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            var clientWindow = new ClientAccountWindow(currentUser);
+            clientWindow.Show();
+        }
+
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
