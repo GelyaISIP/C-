@@ -50,6 +50,7 @@
 Структура проекта:
 -----------------------------------
 LogisticSystem/
+
 ├── Helper/            – вспомогательные классы (конвертеры статусов)
 
 ├── Models/            – сущности (Client, Order, Product, Warehouse, Shipment, Stock, User)
