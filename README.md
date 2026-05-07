@@ -51,12 +51,19 @@
 -----------------------------------
 LogisticSystem/
 ├── Helper/            – вспомогательные классы (конвертеры статусов)
+
 ├── Models/            – сущности (Client, Order, Product, Warehouse, Shipment, Stock, User)
+
 ├── Data/              – контекст базы данных (LogisticsContext)
+
 ├── Migrations/        – миграции EF (схема БД + Seed-метод)
+
 ├── View/              – все окна приложения (AuthorizeWindow, OrderWindow, ShipmentsWindow и др.)
+
 ├── App.config         – строка подключения к БД
+
 ├── App.xaml           – ресурсы приложения, StartupUri
+
 └── LogisticSystem.csproj
 
 Установка и запуск:
