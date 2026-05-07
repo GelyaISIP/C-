@@ -112,6 +112,7 @@ namespace LogisticSystem.View
                 Title = "Изменение статуса заказа",
                 Width = 300,
                 Height = 150,
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E6E6FA")),
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Content = new StackPanel
                 {
@@ -120,7 +121,12 @@ namespace LogisticSystem.View
             {
                 new TextBlock { Text = "Выберите новый статус:" },
                 new ComboBox { Name = "cbStatus", ItemsSource = new[] { "Новый", "Отгружен", "Завершён" }, SelectedIndex = 0 },
-                new Button { Content = "Сохранить", Margin = new Thickness(0,10,0,0), HorizontalAlignment = HorizontalAlignment.Right, Width = 80 }
+                new Button { Content = "Сохранить",
+                Margin = new Thickness(0,10,0,0),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Width = 80,
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B0082")),
+                Foreground = Brushes.White }
             }
                 }
             };
