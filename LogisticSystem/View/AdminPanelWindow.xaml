@@ -34,7 +34,7 @@
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="30"/>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
                             <DataGridTextColumn Header="Артикул" Binding="{Binding SKU}" Width="*"/>
-                            <DataGridTextColumn Header="Остаток по складам" Binding="{Binding Quantity}" Width="*"/>
+                            <DataGridTextColumn Header="Остаток по складам" Binding="{Binding TotalQuantity}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

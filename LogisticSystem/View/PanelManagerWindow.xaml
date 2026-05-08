@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogisticSystem"
         mc:Ignorable="d"
-        Title="Система логистики" Height="700" Width="750" Background="#E6E6FA">
+        Title="Панель менеджера" Height="700" Width="750" Background="#E6E6FA">
     <Grid Margin="30">
         <StackPanel>
             <TextBlock Text="Панель менеджера" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,40"/>

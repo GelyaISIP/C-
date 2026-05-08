@@ -87,11 +87,6 @@ namespace LogisticSystem.View
             LoadOrderHistory();
         }
 
-        // Остальные методы (btnAddProduct_Click, btnSaveOrder_Click, btnAccount_Click) остаются без изменений,
-        // кроме того, что clientId теперь берётся из поля currentClientId.
-        // В btnSaveOrder_Click замените получение clientId на использование currentClientId.
-        // Также удалите дублирующий поиск клиента.
-
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
             var addWindow = new AddProductToOrderWindow(db);
@@ -145,7 +140,6 @@ namespace LogisticSystem.View
                         transaction.Commit();
                         MessageBox.Show("Заказ успешно оформлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                         orderItems.Clear(); // очищаем список товаров
-                        // Если нужно, можно обновить историю (но вкладка не активна)
                     }
                     catch (Exception ex)
                     {
@@ -160,6 +154,16 @@ namespace LogisticSystem.View
         {
             var clientWindow = new ClientAccountWindow(currentUser);
             clientWindow.Show();
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+            var authWin = Application.Current.Windows.OfType<AuthorizeWindow>().FirstOrDefault();
+            if (authWin != null)
+                authWin.Show();
+            else
+                new AuthorizeWindow().Show();
         }
     }
 

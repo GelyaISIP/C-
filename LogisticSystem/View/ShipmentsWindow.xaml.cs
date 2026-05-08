@@ -63,8 +63,11 @@ namespace LogisticSystem.View
 
             if (dpStartDate.SelectedDate != null)
                 query = query.Where(s => s.PlannedShipmentDate >= dpStartDate.SelectedDate);
+            DateTime? endDate = null;
             if (dpEndDate.SelectedDate != null)
-                query = query.Where(s => s.PlannedShipmentDate <= dpEndDate.SelectedDate.Value.AddDays(1));
+                endDate = dpEndDate.SelectedDate.Value.AddDays(1);
+            if (endDate != null)
+                query = query.Where(s => s.PlannedShipmentDate <= endDate);
 
             dgShipments.ItemsSource = query.OrderByDescending(s => s.PlannedShipmentDate).ToList();
         }
@@ -149,6 +152,11 @@ namespace LogisticSystem.View
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
+            var authWin = Application.Current.Windows.OfType<AuthorizeWindow>().FirstOrDefault();
+            if (authWin != null)
+                authWin.Show();
+            else
+                new AuthorizeWindow().Show();
         }
     }
 }

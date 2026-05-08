@@ -48,6 +48,18 @@ namespace LogisticSystem.View
             string productName = cbProduct.Text;
             string warehouseName = cbWarehouse.Text;
 
+            // Проверка остатков на складе
+            using (var tempDb = new LogisticsContext())
+            {
+                var stock = tempDb.Stocks.FirstOrDefault(s => s.ProductId == productId && s.WarehouseId == warehouseId);
+                if (stock == null || stock.Quantity < qty)
+                {
+                    MessageBox.Show($"Недостаточно товара '{productName}' на складе '{warehouseName}'. Доступно: {stock?.Quantity ?? 0}",
+                                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+            }
+
             SelectedOrderItem = new OrderItem
             {
                 ProductId = productId,

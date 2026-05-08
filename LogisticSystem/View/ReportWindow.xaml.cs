@@ -117,9 +117,19 @@ namespace LogisticSystem.View
                         group u by u.Role into g
                         select new { Role = g.Key, Count = g.Count() };
 
+            var converter = new RoleConverter();
+
             dgReport.Columns.Clear();
-            dgReport.Columns.Add(new DataGridTextColumn { Header = "Роль", Binding = new Binding("Role") });
-            dgReport.Columns.Add(new DataGridTextColumn { Header = "Количество", Binding = new Binding("Count") });
+            dgReport.Columns.Add(new DataGridTextColumn
+            {
+                Header = "Роль",
+                Binding = new Binding("Role") { Converter = converter }
+            });
+            dgReport.Columns.Add(new DataGridTextColumn
+            {
+                Header = "Количество",
+                Binding = new Binding("Count")
+            });
             dgReport.ItemsSource = query.ToList();
         }
 
