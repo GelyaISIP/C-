@@ -152,6 +152,11 @@ namespace LogisticSystem.View
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
+            var authWin = Application.Current.Windows.OfType<AuthorizeWindow>().FirstOrDefault();
+            if (authWin != null)
+                authWin.Show();
+            else
+                new AuthorizeWindow().Show();
         }
     }
 }

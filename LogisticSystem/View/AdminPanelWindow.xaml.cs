@@ -35,7 +35,8 @@ namespace LogisticSystem.View
 
         private void LoadProducts()
         {
-            dgProducts.ItemsSource = db.Products.ToList();
+            var products = db.Products.Include("ProductWarehouse").ToList();
+            dgProducts.ItemsSource = products;
         }
 
         private void LoadWarehouses()
